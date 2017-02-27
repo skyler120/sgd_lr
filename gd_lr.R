@@ -1,6 +1,5 @@
-#set.seed(120)
-num_iters_sgd = 1000;
-num_iters_gd = 100;
+num_iters_sgd = 20000;
+num_iters_gd = 5000;
 d = 1;
 w = rep(0,d+1); w2 = rep(0,d+1);
 
@@ -13,33 +12,35 @@ X = matrix(x,N,d, byrow=F); X = cbind(1,X);
 #pos_label = X[which(y==1),]
 #points(pos_label[,2], pos_label[,3],col="red", pch='.')
 
-likelihood <- function(w) {return(1/N * sum(log(1 + exp(-y*w%*%x))))}
+likelihood <- function(w) {return(log(1 + exp(-ry*w%*%rx)))}
 
-grad_l <- function(w, rx,ry) {
-  const = 1/(1+exp(-1*ry*w%*%rx));
-  gradl = -ry*rx*exp(-ry*w%*%rx);
-  return(const*gradl)
-}
+grad_l <- function(w, rx,ry) {return(-ry*rx*1/(1+exp(ry*w%*%rx)))}
 
 pt <- proc.time()[3]
 for(t in 1:num_iters_sgd){
-  r_ind = sample.int(1:N,1); rx = X[r_ind,]; ry = y[r_ind]; 
-  g = -1*grad_l(w, rx,ry)
-  w = w + 1/t * g;
+  r_ind = sample.int(N,1); rx = X[r_ind,]; ry = y[r_ind]; 
+  g = -1*grad_l(w, rx,ry);
+  #w = w + 1/sqrt(t) * g;
+  w = w+ 0.1*g;
 }
-w
-time_sgd = proc.time()[3] - pt
+time_sgd = proc.time()[3] - pt;
 
 pt <- proc.time()[3]
 for(t in 1:num_iters_gd){
   lambda_gl <- function(r){
     return(grad_l(w2,r[-1],r[1]))
   }
-  sg = 0
+  sg = rep(0, d+1);
   for(n in 1:N){
-    sg = sg+grad_l(w2,X[n,],y[n])
+    sg = sg+grad_l(w2,X[n,],y[n]);
   }
-  w2 = w2 - 1/t * sg/N;
+  #w2 = w2 - 1/sqrt(t) * sg/N;
+  w2 = w2 - 0.1*sg/N
 }
+time_gd = proc.time()[3] - pt;
+
+iwls = glm(p~1+X[,2], family="binomial", start=c(0,0))
+
+iwls$coefficients
+w
 w2
-time_gd = proc.time()[3] - pt
