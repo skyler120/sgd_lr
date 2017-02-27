@@ -1,5 +1,5 @@
 #set.seed(120)
-num_iters_sgd = 10000;
+num_iters_sgd = 1000;
 num_iters_gd = 100;
 d = 1;
 w = rep(0,d+1); w2 = rep(0,d+1);
