@@ -17,6 +17,7 @@ grad_l <- function(w, rx,ry) {return(-ry*rx*1/(1+exp(ry*w%*%rx)))}
 lambda_gl <- function(r){ return(grad_l(w2,r[-1],r[1]))}
 
 for(j in 1:length(Ns)){
+  print(j)
   N = Ns[j]; p = rbinom(N,1,0.5); 
   x = rnorm(N*d,mean=-1,sd=sqrt(d)/2)*p + rnorm(N*d,mean=1,sd=sqrt(d)/2)*(1-p);
   y = p; y[which(y==0)] = -1;
