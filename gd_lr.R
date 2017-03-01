@@ -1,7 +1,7 @@
 #fixed number of iterations SGD and GD
 num_iters_sgd = 10000;
 num_iters_gd = 500;
-d = 2;
+d = 4;
 w = rep(0,d+1); w2 = rep(0,d+1);
 eta_sgd = seq(0,1,by=0.01); eta_gd = seq(0,1,by=0.01);
 
