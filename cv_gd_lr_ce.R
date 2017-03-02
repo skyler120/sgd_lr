@@ -4,7 +4,7 @@ d = 2;
 w = rep(0,d+1); w2 = rep(0,d+1);
 eta_sgd = seq(0,1,by=0.1); eta_gd = seq(0,1,by=0.1);
 
-sgd_vals = c(); gd_vals = c(); sgd_times = c(); gd_times = c(); irls_times = c();
+sgd_vals = c(); gd_vals = c(); sgd_times = c(); gd_times = c(); iwls_times = c();
 sgd_iters = c(); gd_iters = c(); iwls_vals = c(); 
 
 norm_vec <- function(x) sqrt(sum(x^2))
@@ -23,30 +23,32 @@ for(j in 1:length(eta_sgd)){
   print(j)
   pt <- proc.time()[3];
   prev_w = rep(-(10^10),d+1);
-  num_iters_sgd = 0;
+  num_iters_sgd = 1000;
   total_w = 0;
-  while(norm_vec(w - prev_w) > convergence_error){
+  for(k in 1:num_iters_sgd){
+  #while(norm_vec(w - prev_w) > convergence_error){
     prev_w = w;
     r_ind = sample.int(N,1); rx = X[r_ind,]; ry = y[r_ind]; 
     g = -1*grad_l(w, rx,ry);
     w = w + eta_sgd[j]*g;
     total_w = total_w + w;
-    num_iters_sgd = num_iters_sgd + 1;
+    #num_iters_sgd = num_iters_sgd + 1;
   }
   sgd_w = total_w/num_iters_sgd;
   time_sgd = proc.time()[3] - pt;
   
   pt <- proc.time()[3]
   prev_w2 = rep(-(10^10),d+1);
-  num_iters_gd = 0;
-  while(norm_vec(w2 - prev_w2) > convergence_error){
+  num_iters_gd = 1000;
+  for(k in 1:num_iters_gd){
+  #while(norm_vec(w2 - prev_w2) > convergence_error){
     prev_w2 = w2;
     sg = rep(0, d+1);
     for(n in 1:N){
       sg = sg+grad_l(w2,X[n,],y[n]);
     }
     w2 = w2 - eta_gd[j]*sg/N
-    num_iters_gd  = num_iters_gd + 1;
+    #num_iters_gd  = num_iters_gd + 1;
   }
   gd_w = w2
   time_gd = proc.time()[3] - pt;
@@ -55,9 +57,11 @@ for(j in 1:length(eta_sgd)){
   iwls = glm(p~1+X[,2] + X[,3], family="binomial", start=rep(0,d+1))
   time_iwls = proc.time()[3] - pt
   
-  sgd_vals = c(sgd_vals, norm_vec(sgd_w + 8/d))
-  gd_vals =  c(gd_vals, norm_vec(gd_w2 + 8/d))
-  iwls_vals = c(iwls_vals, norm_vec(iwls_vals + 8/d))
-  sgd_times = c(sgd_times, time_sgd)
+  sgd_vals = c(sgd_vals, norm_vec(sgd_w + c(0, 8/d, 8/d)));
+  gd_vals =  c(gd_vals, norm_vec(gd_w + c(0, 8/d, 8/d)));
+  iwls_vals = c(iwls_vals, norm_vec(iwls$coefficients + c(0, 8/d, 8/d)));
+  sgd_times = c(sgd_times, time_sgd);
+  gd_times = c(gd_times, time_gd);
+  iwls_times = c(iwls_times, time_iwls);
 }
 
