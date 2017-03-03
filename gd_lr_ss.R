@@ -1,4 +1,4 @@
-#vary sample size
+#Runs Experiment increasing sample size for various N
 convergence_error = 10^(-10);
 d = 2;
 w = rep(0,d+1); w2 = rep(0,d+1);

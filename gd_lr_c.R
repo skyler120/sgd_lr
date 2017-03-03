@@ -1,4 +1,4 @@
-#until convergence
+###### Runs gd and sgd until convergence not for fixed number of trials T
 convergence_error = 10^(-10);
 d = 2;
 w = rep(0,d+1); w2 = rep(0,d+1);

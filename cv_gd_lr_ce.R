@@ -1,8 +1,9 @@
-#until convergence
+###### Computes Best Values of learning rate via cross validation
+###### Specify range of learning rates in eta_sgd and eta_gd
 convergence_error = 10^(-10);
 d = 2;
 w = rep(0,d+1); w2 = rep(0,d+1);
-eta_sgd = seq(0,1,by=0.1); eta_gd = seq(0,1,by=0.1);
+eta_sgd = seq(0.1,1,by=0.1); eta_gd = seq(0.1,1,by=0.1);
 
 sgd_vals = c(); gd_vals = c(); sgd_times = c(); gd_times = c(); iwls_times = c();
 sgd_iters = c(); gd_iters = c(); iwls_vals = c(); 

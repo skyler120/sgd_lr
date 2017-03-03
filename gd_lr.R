@@ -1,4 +1,5 @@
-#fixed number of iterations SGD and GD
+######fixed number of iterations SGD and GD change num_iters_sgd and num_iters_gd
+######to change the number of iterations T
 num_iters_sgd = 1000;
 num_iters_gd = 1000;
 d = 2;
